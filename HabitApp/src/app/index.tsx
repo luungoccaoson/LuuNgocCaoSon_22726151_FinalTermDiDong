@@ -1,6 +1,6 @@
 import EmptyState from "@/components/EmptyState";
 import HabitItem from "@/components/HabitItem";
-import { getAllHabits } from "@/db/db";
+import { getAllHabits, updateDoneToday } from "@/db/db";
 import { Habit } from "@/types/habit";
 import { Link, useFocusEffect } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
@@ -27,11 +27,18 @@ export default function Page() {
     }
 };
 
+const handleToggleDone = (id: number, isDone: 0 | 1) => {
+  console.log(`Toggle Habit ${id}: ${isDone}`);
+  updateDoneToday(db, id, isDone).then(() => handleFetchDb())
+};
+
   useFocusEffect(
     useCallback(() => {
       handleFetchDb();
     }, [db])
   );
+
+
 
   if (isLoading) {
     return (
@@ -58,12 +65,9 @@ export default function Page() {
                 data={habits}
                 keyExtractor={(item) => item.id.toString()}
                 renderItem={({ item }) => (
-                    // Chỉ truyền data theo yêu cầu hiện tại
-                    <HabitItem data={item} /> 
+                    <HabitItem onToggleDone={handleToggleDone} data={item} /> 
                 )}
-                // Thiết lập Empty State
                 ListEmptyComponent={EmptyState}
-                // Đảm bảo Empty State nằm giữa màn hình khi không có data
                 contentContainerStyle={habits.length === 0 ? { flexGrow: 1, justifyContent: 'center' } : {}}
             />
     </View>

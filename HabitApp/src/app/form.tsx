@@ -1,29 +1,45 @@
 import { View, Text } from 'react-native'
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { useSQLiteContext } from 'expo-sqlite';
-import { useNavigation, useRouter } from 'expo-router';
+import { useFocusEffect, useLocalSearchParams, useNavigation, useRouter } from 'expo-router';
 import { Habit } from '@/types/habit';
-import { createHabit } from '@/db/db';
+import { createHabit, getHabitById, updateHabit } from '@/db/db';
 import { Button, RadioButton, TextInput } from 'react-native-paper';
 
 const HabitFormScreen = () => {
     const db = useSQLiteContext();
   const navigation = useNavigation();
   const router = useRouter();
+  const { id } = useLocalSearchParams<{ id?: string }>();
 
   const [formData, setFormData] = useState<Habit>({} as Habit);
 
   const handleSave = async () => {
     if (!formData.title || !formData.description) return;
 
-    // if (id) await updateTransaction(db, formData);
-    await createHabit(db, formData);
+    if (id) await updateHabit(db, formData);
+    else await createHabit(db, formData);
 
     setFormData({} as Habit);
     // titleRef.current?.clear();
     // amountRef.current?.clear();
     router.replace("/");
   };
+
+  useFocusEffect(
+    useCallback(() => {
+      if (id) {
+        getHabitById(db, Number(id)).then((res) => setFormData(res));
+      }
+
+      return () => {
+        setFormData({} as Habit);
+        // titleRef.current?.clear();
+        // amountRef.current?.clear();
+        (navigation as any).setParams({ id: undefined });
+      };
+    }, [id, db])
+  );
   return (
     <View className="flex flex-1 justify-center items-center">
       <View className="w-full px-4 gap-4">
@@ -41,12 +57,12 @@ const HabitFormScreen = () => {
           }
         />
         {/* <RadioButton.Group
-          value={formData.active ? "1" : "0"}
+          value={formData.done_today ? "1" : "0"}
           onValueChange={(value) =>
-            setFormData({ ...formData, active : value === "1" ? true : false })
+            setFormData({ ...formData, done_today : value === "1" ? true : false })
           }
         >
-            <Text className="text-lg">Active</Text>
+            <Text className="text-lg">done_today</Text>
           <RadioButton.Item label="Đang theo dõi" value="1" />
           <RadioButton.Item label="Hoàn thành" value="0" />
         </RadioButton.Group> */}

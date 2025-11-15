@@ -42,6 +42,7 @@ export const getHabitById = async (db: SQLiteDatabase, id: number) => {
   );
 };
 
+
 // UPDATE
 export const updateHabit = async (
   db: SQLiteDatabase,
@@ -52,6 +53,17 @@ export const updateHabit = async (
     [data.title, data.description, data.created_at, data.id]
   );
 };
+export const updateDoneToday = async (db: SQLiteDatabase ,id: number, done: 0 | 1) => {
+    try {
+      await db.runAsync(
+        `UPDATE habits SET done_today = ? WHERE id = ?`,
+        [done, id]
+      );
+      console.log(`Habit ${id} marked as ${done === 1 ? 'DONE' : 'UNDONE'} for today.`);
+    } catch (error) {
+      console.error("Error updating done_today status:", error);
+    }
+  };
 
 // //  DELETE
 // export const softDeleteTransaction = async (db: SQLiteDatabase, id: number) => {
