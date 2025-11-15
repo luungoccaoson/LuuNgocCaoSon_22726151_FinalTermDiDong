@@ -8,8 +8,8 @@ type Props = {
   };
 
 const HabitItem = ({data} : Props) => {
-    const doneTodayText = data.done_today === 1 ? '✅ Đã hoàn thành' : '❌ Chưa hoàn thành';
-    const doneTodayClass = data.done_today === 1 ? 'text-green-600' : 'text-red-600'; 
+    const doneTodayText = data.done_today === true ? '✅ Đã hoàn thành' : '❌ Chưa hoàn thành';
+    const doneTodayClass = data.done_today === true ? 'text-green-600' : 'text-red-600'; 
 
     return (
         <View className="px-4 my-2">
@@ -20,7 +20,7 @@ const HabitItem = ({data} : Props) => {
                     title={data.title} 
                     titleStyle={{ fontWeight: '700', fontSize: 18 }}
                     // Có thể dùng subtitle để làm nổi bật trạng thái
-                    subtitle={data.done_today === 1 ? 'Đã hoàn thành' : 'Cần thực hiện'}
+                    subtitle={data.done_today === true ? 'Đã hoàn thành' : 'Cần thực hiện'}
                 />
                 
                 <Card.Content>

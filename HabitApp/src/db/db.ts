@@ -48,8 +48,8 @@ export const updateHabit = async (
   data: Habit
 ) => {
   await db.runAsync(
-    `UPDATE habits SET title = ?, description = ?, active = ?, done_today = ?, created_at = ?, WHERE id = ?`,
-    [data.title, data.description, data.active, data.done_today, data.created_at, data.id]
+    `UPDATE habits SET title = ?, description = ?, created_at = ?, WHERE id = ?`,
+    [data.title, data.description, data.created_at, data.id]
   );
 };
 
