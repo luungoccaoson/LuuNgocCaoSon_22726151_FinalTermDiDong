@@ -16,7 +16,7 @@ export const initTable = async (db: SQLiteDatabase) => {
 };
 
 // CREATE
-export const createTransaction = async (
+export const createHabit = async (
   db: SQLiteDatabase,
   data: Habit
 ) => {
@@ -27,7 +27,7 @@ export const createTransaction = async (
 };
 
 // READ
-export const getAllTransactions = async (
+export const getAllHabits = async (
   db: SQLiteDatabase
 ) => {
   return await db.getAllAsync<Habit>(
@@ -35,7 +35,7 @@ export const getAllTransactions = async (
   );
 };
 
-export const getTransactionById = async (db: SQLiteDatabase, id: number) => {
+export const getHabitById = async (db: SQLiteDatabase, id: number) => {
   return await db.getFirstAsync<Habit>(
     `SELECT * FROM habits WHERE id = ?`,
     [id]
@@ -43,7 +43,7 @@ export const getTransactionById = async (db: SQLiteDatabase, id: number) => {
 };
 
 // UPDATE
-export const updateTransaction = async (
+export const updateHabit = async (
   db: SQLiteDatabase,
   data: Habit
 ) => {
