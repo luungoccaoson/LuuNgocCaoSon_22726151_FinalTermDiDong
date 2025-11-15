@@ -21,8 +21,6 @@ const HabitFormScreen = () => {
     await createHabit(db, formData);
 
     setFormData({} as Habit);
-    // titleRef.current?.clear();
-    // amountRef.current?.clear();
     router.replace("/");
   };
 
