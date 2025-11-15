@@ -1,11 +1,11 @@
 import EmptyState from "@/components/EmptyState";
 import HabitItem from "@/components/HabitItem";
-import { getAllHabits, updateDoneToday } from "@/db/db";
+import { deleteHabit, getAllHabits, updateDoneToday } from "@/db/db";
 import { Habit } from "@/types/habit";
 import { Link, useFocusEffect } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
 import React, { useCallback, useState } from "react";
-import { FlatList, Text, View } from "react-native";
+import { Alert, FlatList, Text, View } from "react-native";
 import { ActivityIndicator } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -32,12 +32,41 @@ const handleToggleDone = (id: number, isDone: 0 | 1) => {
   updateDoneToday(db, id, isDone).then(() => handleFetchDb())
 };
 
+const handleDelete = (id: number, title: string) => {
+  Alert.alert(
+    "Xác nhận Xóa",
+    `Bạn có chắc chắn muốn xóa thói quen "${title}" không? Hành động này không thể hoàn tác.`,
+    [
+      {
+        text: "Hủy",
+        style: "cancel",
+      },
+      {
+        text: "Xóa",
+        style: "destructive",
+        onPress: async () => {
+          try {
+            await deleteHabit(db, id);
+            // Cập nhật danh sách sau khi xóa thành công
+            handleFetchDb(); 
+            console.log(`Habit ${id} (${title}) deleted.`);
+          } catch (error) {
+            Alert.alert("Lỗi", "Không thể xóa thói quen.");
+            console.error("Delete failed:", error);
+          }
+        },
+      },
+    ],
+    { cancelable: true }
+  );
+};
+
   useFocusEffect(
     useCallback(() => {
       handleFetchDb();
     }, [db])
   );
-
+  
 
 
   if (isLoading) {
@@ -65,7 +94,7 @@ const handleToggleDone = (id: number, isDone: 0 | 1) => {
                 data={habits}
                 keyExtractor={(item) => item.id.toString()}
                 renderItem={({ item }) => (
-                    <HabitItem onToggleDone={handleToggleDone} data={item} /> 
+                    <HabitItem onDelete={handleDelete} onToggleDone={handleToggleDone} data={item} /> 
                 )}
                 ListEmptyComponent={EmptyState}
                 contentContainerStyle={habits.length === 0 ? { flexGrow: 1, justifyContent: 'center' } : {}}

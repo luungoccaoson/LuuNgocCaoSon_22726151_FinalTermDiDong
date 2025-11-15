@@ -7,13 +7,14 @@ import { useRouter } from 'expo-router';
 type Props = {
     data: Habit;
     onToggleDone: (id: number, isDone: 0 | 1) => void;
+    onDelete: (id: number, title: string) => void;
   };
 
-const HabitItem = ({data, onToggleDone} : Props) => {
+const HabitItem = ({data, onToggleDone, onDelete} : Props) => {
     const router = useRouter();
-    const onPressEdit = () => {
-        router.push({ pathname: "/form", params: { id: data.id.toString() } });
-      };
+    // const onPressEdit = () => {
+    //     router.push({ pathname: "/form", params: { id: data.id.toString() } });
+    //   };
     const doneTodayText = data.done_today === 0 ? 'Đã hoàn thành' : 'Chưa hoàn thành';
     const doneTodayClass = data.done_today === 0 ? 'text-green-600' : 'text-red-600'; 
 
@@ -53,11 +54,15 @@ const HabitItem = ({data, onToggleDone} : Props) => {
                 </Card.Content>
                 
                 <Card.Actions>
-                    <Button mode="contained" onPress={onPressEdit}>
+                    <Button mode="contained" >
                         Edit
                     </Button>
-                    <Button mode="contained" >
-                        Delete
+                    <Button 
+                        mode="contained" 
+                        buttonColor="#EF4444" // Màu đỏ
+                        onPress={() => onDelete(data.id, data.title)} // Truyền ID và Title để xác nhận
+                    >
+                        Xóa
                     </Button>
                 </Card.Actions>
             </Card>

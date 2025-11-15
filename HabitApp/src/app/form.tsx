@@ -10,15 +10,15 @@ const HabitFormScreen = () => {
     const db = useSQLiteContext();
   const navigation = useNavigation();
   const router = useRouter();
-  const { id } = useLocalSearchParams<{ id?: string }>();
+//   const { id } = useLocalSearchParams<{ id?: string }>();
 
   const [formData, setFormData] = useState<Habit>({} as Habit);
 
   const handleSave = async () => {
     if (!formData.title || !formData.description) return;
 
-    if (id) await updateHabit(db, formData);
-    else await createHabit(db, formData);
+    // if (id) await updateHabit(db, formData);
+    await createHabit(db, formData);
 
     setFormData({} as Habit);
     // titleRef.current?.clear();
@@ -26,20 +26,20 @@ const HabitFormScreen = () => {
     router.replace("/");
   };
 
-  useFocusEffect(
-    useCallback(() => {
-      if (id) {
-        getHabitById(db, Number(id)).then((res) => setFormData(res));
-      }
+//   useFocusEffect(
+//     useCallback(() => {
+//       if (id) {
+//         getHabitById(db, Number(id)).then((res) => setFormData(res));
+//       }
 
-      return () => {
-        setFormData({} as Habit);
-        // titleRef.current?.clear();
-        // amountRef.current?.clear();
-        (navigation as any).setParams({ id: undefined });
-      };
-    }, [id, db])
-  );
+//       return () => {
+//         setFormData({} as Habit);
+//         // titleRef.current?.clear();
+//         // amountRef.current?.clear();
+//         (navigation as any).setParams({ id: undefined });
+//       };
+//     }, [id, db])
+//   );
   return (
     <View className="flex flex-1 justify-center items-center">
       <View className="w-full px-4 gap-4">

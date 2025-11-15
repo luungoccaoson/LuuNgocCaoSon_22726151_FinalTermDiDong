@@ -66,10 +66,9 @@ export const updateDoneToday = async (db: SQLiteDatabase ,id: number, done: 0 | 
   };
 
 // //  DELETE
-// export const softDeleteTransaction = async (db: SQLiteDatabase, id: number) => {
-//   await db.runAsync(`UPDATE habits SET isDeleted = 1 WHERE id = ?`, [id]);
-// };
-
+export const deleteHabit = async (db: SQLiteDatabase, id: number) => {
+    await db.runAsync(`DELETE FROM habits WHERE id = ?`, [id]);
+  };
 // export const restoreTransaction = async (db: SQLiteDatabase, id: number) => {
 //   await db.runAsync(`UPDATE transactions SET isDeleted = 0 WHERE id = ?`, [id]);
 // };
